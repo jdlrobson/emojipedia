@@ -25,10 +25,16 @@ async function translate(e) {
   }
 
   if ( val ) {
-    const a = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=&formatversion=2&list=search&srsearch=${val}`);
+    const a = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageprops&generator=search&formatversion=2&ppprop=disambiguation&gsrsearch=${val}`);
     const json = await a.json();
-    if ( json.query.search.length ) {
-      return factoids(json.query.search[0].title);
+    const pages = json.query.pages;
+    if ( pages.length ) {
+      let page = pages[0];
+      // if disambiguation get another
+      if ( page.pageprops && page.pageprops.disambiguation !== undefined ) {
+        page = pages.slice( 1 )[Math.floor(Math.random() * (pages.length - 2))];
+      }
+      return factoids(page.title);
     } else {
       return false;
     }
