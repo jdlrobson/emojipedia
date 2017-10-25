@@ -70,7 +70,13 @@ async function emojiFact( req, res ) {
   var text = await printFact( req.params.emoji );
   res.status( 200 );
   res.header('Content-Type', 'text/html charset=utf-8');
-  res.end( html( text ) );
+  res.end(
+    html(
+      `${text}
+      <p><a href="/">Try another</a></p>
+      `
+    )
+  );
 }
 app.get( '/:emoji', emojiFact );
 
