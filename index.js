@@ -16,7 +16,7 @@ async function factoids( title ) {
 
 async function translate(e) {
   let val = '';
-  e = e.split( ' ' );
+  e = Array.from(e);
   for( let i = 0; i < e.length; i++) {
     let emoj = emoji.find(e[i]);
     if ( emoj ) {
@@ -62,6 +62,24 @@ async function emojiFact( req, res ) {
   res.end( text );
 }
 app.get( '/:emoji', emojiFact );
+
+app.get( '/', function ( req, res ) {
+  if ( req.query.emoji ) {
+    res.redirect('/' + req.query.emoji);
+  } else {
+    res.status( 200 );
+    res.header('Content-Type', 'text/html charset=utf-8');
+    res.end( `<!DOCTYPE HTML>
+    <html>
+    <body>
+      <form method="get" action="/">
+        <input name="emoji" placeholder="Unleash your emoji">
+        <input type="submit">
+      </form>
+    </body>
+    </html>` );
+  }
+} );
 
 const port = app.get( 'port' ) || 8142;
 app.listen( port )
