@@ -9,7 +9,7 @@ async function factoids( title ) {
   const { stdout, stderr } = await exec('python3 summarizer/get.py "' + title + '"');
   return {
     title: title,
-    url: `https://wikipedia.org/wiki/${title}`,
+    url: `https://en.wikipedia.org/wiki/${title}`,
     text: stdout
   }
 }
@@ -46,19 +46,30 @@ async function translate(e) {
 async function printFact(emojiStr) {
   const fact = await translate(emojiStr);
   return [
-    emojiStr,
-    fact.title,
-    fact.text,
-    fact.url
+    `<h2>${fact.title}</h2>`,
+    `<p>${fact.text}</p>`,
+    `<a href="${fact.url}">${fact.url}</a>`
   ].join('\n');
 }
 
 const app = express()
 
+function html( body ) {
+  return `<!DOCTYPE HTML>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width"/>
+      </head>
+    <body>
+      ${body}
+    </body>
+    </html>`;
+}
+
 async function emojiFact( req, res ) {
   var text = await printFact( req.params.emoji );
   res.status( 200 );
-  res.header('Content-Type', 'text/plain charset=utf-8');
+  res.header('Content-Type', 'text/html charset=utf-8');
   res.end( text );
 }
 app.get( '/:emoji', emojiFact );
@@ -69,15 +80,14 @@ app.get( '/', function ( req, res ) {
   } else {
     res.status( 200 );
     res.header('Content-Type', 'text/html charset=utf-8');
-    res.end( `<!DOCTYPE HTML>
-    <html>
-    <body>
-      <form method="get" action="/">
+    res.end(
+      html(
+        `<form method="get" action="/">
         <input name="emoji" placeholder="Unleash your emoji">
         <input type="submit">
-      </form>
-    </body>
-    </html>` );
+      </form>`
+      )
+    );
   }
 } );
 
