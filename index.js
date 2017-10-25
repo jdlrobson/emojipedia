@@ -78,6 +78,11 @@ async function emojiFact( req, res ) {
     )
   );
 }
+
+app.get( '/random', function ( req, res ) {
+  res.redirect('/' + emoji.random().emoji);
+});
+
 app.get( '/:emoji', emojiFact );
 
 app.get( '/', function ( req, res ) {
@@ -91,6 +96,7 @@ app.get( '/', function ( req, res ) {
         `<form method="get" action="/">
         <input name="emoji" placeholder="Unleash your emoji">
         <input type="submit">
+        <a href="/random">I'm feeling lucky</a>
       </form>`
       )
     );
