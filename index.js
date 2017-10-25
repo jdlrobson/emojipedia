@@ -91,6 +91,9 @@ app.get( '/', function ( req, res ) {
   }
 } );
 
-const port = app.get( 'port' ) || 8142;
+if ( process.env.PORT ) {
+  app.set( 'port', process.env.PORT );
+}
+const port = app.get( 'port' );
 app.listen( port )
 console.log(`Running on ${port}`)
