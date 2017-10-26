@@ -27,7 +27,9 @@ async function translate(e) {
   if ( val ) {
     const a = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageprops&generator=search&formatversion=2&ppprop=disambiguation&gsrsearch=${val}`);
     const json = await a.json();
-    const pages = json.query.pages;
+    const pages = json.query.pages.sort( ( page, page2 ) => {
+      return page.index < page2.index ? -1 : 1;
+    } );
     if ( pages.length ) {
       let page = pages[0];
       // if disambiguation get another
