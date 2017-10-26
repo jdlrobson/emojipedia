@@ -60,6 +60,7 @@ function html( body ) {
   return `<!DOCTYPE HTML>
     <html>
       <head>
+        <style>body { font-size: 200%; }</style>
         <meta name="viewport" content="width=device-width"/>
       </head>
     <body>
@@ -98,7 +99,7 @@ app.get( '/', function ( req, res ) {
         `<form method="get" action="/">
         <input name="emoji" placeholder="Unleash your emoji">
         <input type="submit">
-        <a href="/random">I'm feeling lucky</a>
+        <p><a href="/random">Surprise me</a></p>
       </form>`
       )
     );
